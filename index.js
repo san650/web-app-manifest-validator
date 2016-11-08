@@ -3,11 +3,13 @@
 module.exports = validate;
 
 // See "Manifest and its members" in https://w3c.github.io/manifest/
+
 function validate(manifest) {
   var errors = [];
 
   errors = validateDir(manifest, []);
   errors = validateLang(manifest, errors);
+  errors = validateName(manifest, errors);
 
   return errors;
 }
@@ -29,6 +31,14 @@ function validateDir(manifest, errors) {
 function validateLang(manifest, errors) {
   if (manifest.lang !== undefined && !/^\w*(-\w*)*$/.test(manifest.lang)) {
     return add(errors, 'Invalid "lang" value "' + manifest.lang + '".');
+  }
+
+  return errors;
+}
+
+function validateName(manifest, errors) {
+  if (manifest.name && typeof(manifest.name) !== 'string') {
+    return add(errors, 'Invalid "name" value type "' + typeof(manifest.name) + '". Expected a string or undefined.');
   }
 
   return errors;

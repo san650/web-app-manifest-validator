@@ -75,9 +75,28 @@ describe('validate', function() {
     });
   });
 
-  // describe('name member', function() {
-  //   it('returns an error on invalid value', function() {
-  //     
-  //   });
-  // });
+  describe('name member', function() {
+    it('returns an error on invalid value', function() {
+      var expected = [
+        'Invalid "name" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        name: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        name: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ name: undefined }), EMPTY);
+    });
+  });
 });
