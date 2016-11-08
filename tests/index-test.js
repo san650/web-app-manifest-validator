@@ -76,7 +76,7 @@ describe('validate', function() {
   });
 
   describe('name member', function() {
-    it('returns an error on invalid value', function() {
+    it('returns an error on invalid value type', function() {
       var expected = [
         'Invalid "name" value type "number". Expected a string or undefined.'
       ];
@@ -97,6 +97,56 @@ describe('validate', function() {
 
     it('is valid when value is undefined', function() {
       assert.deepEqual(validate({ name: undefined }), EMPTY);
+    });
+  });
+
+  describe('short_name member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "short_name" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        short_name: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        short_name: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ short_name: undefined }), EMPTY);
+    });
+  });
+
+  describe('description member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "description" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        description: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        description: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ description: undefined }), EMPTY);
     });
   });
 });

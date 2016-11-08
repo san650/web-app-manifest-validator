@@ -9,7 +9,9 @@ function validate(manifest) {
 
   errors = validateDir(manifest, []);
   errors = validateLang(manifest, errors);
-  errors = validateName(manifest, errors);
+  errors = validateString(manifest, 'name', errors);
+  errors = validateString(manifest, 'short_name', errors);
+  errors = validateString(manifest, 'description', errors);
 
   return errors;
 }
@@ -36,9 +38,9 @@ function validateLang(manifest, errors) {
   return errors;
 }
 
-function validateName(manifest, errors) {
-  if (manifest.name && typeof(manifest.name) !== 'string') {
-    return add(errors, 'Invalid "name" value type "' + typeof(manifest.name) + '". Expected a string or undefined.');
+function validateString(manifest, member, errors) {
+  if (manifest[member] && typeof(manifest[member]) !== 'string') {
+    return add(errors, 'Invalid "' + member + '" value type "' + typeof(manifest[member]) + '". Expected a string or undefined.');
   }
 
   return errors;
