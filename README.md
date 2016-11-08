@@ -11,10 +11,10 @@ $ npm install --save web-app-manifest-validator
 ## Usage
 
 ```js
-var validator = require('web-app-manifest-validator');
+var validate = require('web-app-manifest-validator');
 var manifest = require('./manifest.json');
 
-validator(manifest).forEach(function(error) {
+validate(manifest).forEach(function(error) {
   console.log(error);
 });
 ```
