@@ -149,4 +149,29 @@ describe('validate', function() {
       assert.deepEqual(validate({ description: undefined }), EMPTY);
     });
   });
+
+  describe('scope member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "scope" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        scope: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        scope: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ scope: undefined }), EMPTY);
+    });
+  });
 });

@@ -9,9 +9,10 @@ function validate(manifest) {
 
   errors = validateDir(manifest, []);
   errors = validateLang(manifest, errors);
-  errors = validateString(manifest, 'name', errors);
-  errors = validateString(manifest, 'short_name', errors);
-  errors = validateString(manifest, 'description', errors);
+
+  ['name', 'short_name', 'description', 'scope'].forEach(function(member) {
+    errors = validateString(manifest, member, errors);
+  });
 
   return errors;
 }
