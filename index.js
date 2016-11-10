@@ -14,6 +14,8 @@ function validate(manifest) {
     errors = validateString(manifest, member, errors);
   });
 
+  errors = validateStartUrl(manifest, errors);
+
   return errors;
 }
 
@@ -45,6 +47,18 @@ function validateString(manifest, member, errors) {
   }
 
   return errors;
+}
+
+function validateStartUrl(manifest, errors) {
+  var newErrors = validateString(manifest, 'start_url', []);
+  var startUrl = manifest.start_url;
+  var scope = manifest.scope;
+
+  if (!newErrors.length && typeof(scope) === 'string' && typeof(startUrl) === 'string' && !startUrl.startsWith(scope)) {
+    newErrors = add(newErrors, 'Invalid "start_url" value. "start_url" is not within scope of scope URL.');
+  }
+
+  return errors.concat(newErrors);
 }
 
 function add(arr, message) {

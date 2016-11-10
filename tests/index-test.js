@@ -174,4 +174,50 @@ describe('validate', function() {
       assert.deepEqual(validate({ scope: undefined }), EMPTY);
     });
   });
+
+  describe('start_url member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "start_url" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        start_url: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        start_url: '/foo/bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ start_url: undefined }), EMPTY);
+    });
+
+    it('returns an error if start_url is not within scope of scopeURL', function() {
+      var expected = [
+        'Invalid "start_url" value. "start_url" is not within scope of scope URL.'
+      ];
+      var manifest = {
+        start_url: '/foo/bar',
+        scope: '/baz/qux'
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid when start_url is in the sope of scope URL', function() {
+      var manifest = {
+        start_url: '/foo/bar',
+        scope: '/foo'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+  });
 });
