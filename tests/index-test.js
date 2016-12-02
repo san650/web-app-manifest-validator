@@ -415,4 +415,73 @@ describe('validate', function() {
       assert.deepEqual(validate({ color: undefined }), EMPTY);
     });
   });
+
+  describe('background_color member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "background_color" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        background_color: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        background_color: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ background_color: undefined }), EMPTY);
+    });
+  });
+
+  describe('prefer_related_applications member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "prefer_related_applications" value type "number". Expected a boolean or undefined.'
+      ];
+      var manifest = {
+        prefer_related_applications: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any boolean', function() {
+      var manifest = {
+        prefer_related_applications: true,
+        preferred_applications: [
+          {
+            platform: "itunes",
+            url: "https://itunes.apple.com/app/example-app1/id123456789"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+
+      manifest = {
+        prefer_related_applications: false
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('returns an error if no related_application is defined', function() {
+      var expected = [
+        '"prefer_related_applications" is set to true but "preferred_applications" is empty or undefined.'
+      ];
+      var manifest = {
+        prefer_related_applications: true
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+  });
 });

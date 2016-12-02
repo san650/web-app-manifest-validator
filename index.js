@@ -36,7 +36,7 @@ function validate(manifest) {
   errors = validateEnum(manifest, 'dir', ENUM_DIR, errors);
   errors = validateLang(manifest, errors);
 
-  ['name', 'short_name', 'description', 'scope', 'color'].forEach(function(member) {
+  ['name', 'short_name', 'description', 'scope', 'color', 'background_color'].forEach(function(member) {
     errors = validateString(manifest, member, errors);
   });
 
@@ -44,6 +44,29 @@ function validate(manifest) {
   errors = validateIcons(manifest, errors);
   errors = validateEnum(manifest, 'display', ENUM_DISPLAY, errors);
   errors = validateEnum(manifest, 'orientation', ENUM_ORIENTATION, errors);
+  errors = validatePreferRelatedApplications(manifest, errors);
+
+  return errors;
+}
+
+function validatePreferRelatedApplications(manifest, errors) {
+  var member = 'prefer_related_applications';
+
+  errors = validateBoolean(manifest, member, errors);
+
+  if (manifest[member] === true && !(isArray(manifest['preferred_applications']) && manifest['preferred_applications'].length)) {
+    errors = add(errors, '"prefer_related_applications" is set to true but "preferred_applications" is empty or undefined.');
+  }
+
+  return errors;
+}
+
+function validateBoolean(manifest, memberName, errors) {
+  var value = manifest[memberName];
+
+  if (!isNullOrUndefined(value) && typeof(value) !== 'boolean') {
+    return add(errors, `Invalid "${memberName}" value type "${typeof(value)}". Expected a boolean or undefined.`);
+  }
 
   return errors;
 }
