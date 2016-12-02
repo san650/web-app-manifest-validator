@@ -36,7 +36,15 @@ function validate(manifest) {
   errors = validateEnum(manifest, 'dir', ENUM_DIR, errors);
   errors = validateLang(manifest, errors);
 
-  ['name', 'short_name', 'description', 'scope', 'color', 'background_color'].forEach(function(member) {
+  [
+    'name',
+    'short_name',
+    'description',
+    'scope',
+    'color',
+    'background_color',
+    'theme_color'
+  ].forEach(function(member) {
     errors = validateString(manifest, member, errors);
   });
 

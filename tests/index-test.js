@@ -458,6 +458,31 @@ describe('validate', function() {
     });
   });
 
+  describe('theme_color member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "theme_color" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        theme_color: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        theme_color: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ theme_color: undefined }), EMPTY);
+    });
+  });
+
   describe('prefer_related_applications member', function() {
     it('returns an error on invalid value type', function() {
       var expected = [
