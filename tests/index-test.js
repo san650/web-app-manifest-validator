@@ -220,4 +220,126 @@ describe('validate', function() {
       assert.deepEqual(validate(manifest), EMPTY);
     });
   });
+
+  describe('icons member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "icons" value type "number". Expected an array or undefined.'
+      ];
+      var manifest = {
+        icons: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ icons: undefined }), EMPTY);
+    });
+
+    it('is valid when is an empty array', function() {
+      var manifest = {
+        icons: [ ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when element has source and sizes' , function() {
+      var manifest = {
+        icons: [
+          {
+            src: "icon/lowres.webp",
+            sizes: "16x16 32x32 48x48",
+            type: "image/webp"
+          },{
+            src: "icon/lowres.png",
+            sizes: "64x64"
+          }, {
+            src: "icon/hd_hi",
+            sizes: "128x128"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('validates src exists for every icon', function() {
+      var manifest = {
+        icons: [
+          {
+            src: "icon/lowres.webp",
+            sizes: "16x16 32x32 48x48",
+            type: "image/webp"
+          },{
+            sizes: "64x64"
+          }, {
+            src: 12,
+            sizes: "128x128"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), [
+        'Invalid "icons" value. Icons need to have a valid "src" attribute.'
+      ]);
+    });
+
+    it('validates sizes are valid for every icon', function() {
+      var manifest = {
+        icons: [
+          {
+            src: "icon/lowres.webp",
+            sizes: "x16"
+          },{
+            src: "icon/lowres.webp",
+            sizes: "64x64 "
+          }, {
+            src: "icon/lowres.webp",
+            sizes: "hola"
+          },
+          {
+            src: "icon/lowres.webp",
+            sizes: 128
+          },{
+            src: "icon/lowres.webp",
+            sizes: "64x64,64x64"
+          }, {
+            src: "icon/lowres.webp",
+            sizes: "64x6464x64"
+          }, {
+            src: "icon/lowres.webp",
+            sizes: "64x64   64x64"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), [
+        `Invalid icon's "sizes" value "x16". The expected format is "123x345".`,
+        `Invalid icon's "sizes" value "hola". The expected format is "123x345".`,
+        `Invalid icon's "sizes" value "128". The expected format is "123x345".`,
+        `Invalid icon's "sizes" value "64x64,64x64". The expected format is "123x345".`,
+        `Invalid icon's "sizes" value "64x6464x64". The expected format is "123x345".`
+      ]);
+    });
+
+    it('validates type if of valid type for every icon', function() {
+      var manifest = {
+        icons: [
+          {
+            src: "icon/lowres.webp",
+            type: "foo/bar"
+          },{
+            src: "icon/lowres.webp",
+            type: 100
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), [
+        'Invalid "type" value type "number". Expected a string or undefined.'
+      ]);
+    });
+  });
 });

@@ -2,6 +2,8 @@
 
 module.exports = validate;
 
+var isArray = require('is-array');
+
 // See "Manifest and its members" in https://w3c.github.io/manifest/
 
 function validate(manifest) {
@@ -15,6 +17,7 @@ function validate(manifest) {
   });
 
   errors = validateStartUrl(manifest, errors);
+  errors = validateIcons(manifest, errors);
 
   return errors;
 }
@@ -56,6 +59,34 @@ function validateStartUrl(manifest, errors) {
 
   if (!newErrors.length && typeof(scope) === 'string' && typeof(startUrl) === 'string' && !startUrl.startsWith(scope)) {
     newErrors = add(newErrors, 'Invalid "start_url" value. "start_url" is not within scope of scope URL.');
+  }
+
+  return errors.concat(newErrors);
+}
+
+function validateIcons(manifest, errors) {
+  var newErrors = [];
+  var skip = false;
+
+  if (manifest.icons) {
+    if (!isArray(manifest.icons)) {
+      errors = add(errors, 'Invalid "icons" value type "' + typeof(manifest.icons) + '". Expected an array or undefined.');
+    } else {
+      manifest.icons.forEach(function(icon) {
+        if (!skip && (!icon.src || typeof icon.src !== 'string')) {
+          skip = true;
+          newErrors = add(newErrors, 'Invalid "icons" value. Icons need to have a valid "src" attribute.');
+        }
+
+        if (icon.sizes != null) {
+          if (typeof(icon.sizes) !== 'string' || !/^\s*\d+x\d+(\s+\d+x\d+)*\s*$/.test(icon.sizes)) {
+            newErrors = add(newErrors, `Invalid icon's "sizes" value "${icon.sizes}". The expected format is "123x345".`);
+          }
+        }
+
+        newErrors = validateString(icon, 'type', newErrors);
+      });
+    }
   }
 
   return errors.concat(newErrors);
