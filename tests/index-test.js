@@ -341,6 +341,23 @@ describe('validate', function() {
         'Invalid "type" value type "number". Expected a string or undefined.'
       ]);
     });
+
+    it('validates icon has unknown properties', function() {
+      var expected = [
+        `Unknown icon attribute "foo".`
+      ];
+
+      var manifest = {
+        icons: [
+          {
+            src: "icon/lowres.webp",
+            foo: 123
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
   });
 
   describe('display member', function() {
@@ -482,6 +499,108 @@ describe('validate', function() {
       };
 
       assert.deepEqual(validate(manifest), expected);
+    });
+  });
+
+  describe('related_applications member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "related_applications" value type "number". Expected an array or undefined.'
+      ];
+      var manifest = {
+        related_applications: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid when is an empty array', function() {
+      var manifest = {
+        related_applications: [ ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('validates application object has valid platform', function() {
+      var expected = [
+        `Invalid preferred application "platform" value type "number". Expected a string or undefined.`
+      ];
+
+      var manifest = {
+        related_applications: [
+          {
+            platform: 123
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('validates application object has valid url', function() {
+      var expected = [
+        `Invalid preferred application "url" value type "number". Expected a string or undefined.`
+      ];
+
+      var manifest = {
+        related_applications: [
+          {
+            url: 123
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('validates application object has valid platform', function() {
+      var expected = [
+        `Invalid preferred application "id" value type "number". Expected a string or undefined.`
+      ];
+
+      var manifest = {
+        related_applications: [
+          {
+            id: 123
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('validates application object has unknown properties', function() {
+      var expected = [
+        `Unknown preferred application attribute "foo".`
+      ];
+
+      var manifest = {
+        related_applications: [
+          {
+            foo: 123
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('validates application object', function() {
+      var manifest = {
+        related_applications: [
+          {
+            platform: "play",
+            url: "https://play.google.com/store/apps/details?id=com.example.app1",
+            id: "com.example.app1"
+          }, {
+            platform: "itunes",
+            url: "https://itunes.apple.com/app/example-app1/id123456789"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
     });
   });
 });

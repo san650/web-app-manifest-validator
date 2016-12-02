@@ -45,6 +45,43 @@ function validate(manifest) {
   errors = validateEnum(manifest, 'display', ENUM_DISPLAY, errors);
   errors = validateEnum(manifest, 'orientation', ENUM_ORIENTATION, errors);
   errors = validatePreferRelatedApplications(manifest, errors);
+  errors = validatePreferredApplications(manifest, errors);
+
+  return errors;
+}
+
+function validatePreferredApplications(manifest, errors) {
+  var applications = manifest['related_applications'];
+
+  if (!isNullOrUndefined(applications)) {
+    if (!isArray(applications)) {
+      errors = add(errors, `Invalid "related_applications" value type "${typeof(applications)}". Expected an array or undefined.`);
+    } else {
+      applications.forEach(function(application) {
+        errors = validateString(application, 'url', errors, {
+          memberPrefix: 'preferred application'
+        });
+        errors = validateString(application, 'platform', errors, {
+          memberPrefix: 'preferred application'
+        });
+        errors = validateString(application, 'id', errors, {
+          memberPrefix: 'preferred application'
+        });
+
+        errors = validateKnownProperties('preferred application', application, ['url', 'platform', 'id'], errors);
+      });
+    }
+  }
+
+  return errors;
+}
+
+function validateKnownProperties(objectName, object, validProperties, errors) {
+  Object.keys(object).forEach(function(property) {
+    if (!includes(validProperties, property)) {
+      errors = add(errors, 'Unknown ' + objectName + ' attribute "' + property +'".');
+    }
+  });
 
   return errors;
 }
@@ -91,9 +128,13 @@ function validateLang(manifest, errors) {
   return errors;
 }
 
-function validateString(manifest, member, errors) {
+function validateString(manifest, member, errors, options) {
+  options = options || {};
+
+  var prefix =options.memberPrefix ? ` ${options.memberPrefix} ` : ' ';
+
   if (manifest[member] && typeof(manifest[member]) !== 'string') {
-    return add(errors, 'Invalid "' + member + '" value type "' + typeof(manifest[member]) + '". Expected a string or undefined.');
+    return add(errors, `Invalid${prefix}"${member}" value type "${typeof(manifest[member])}". Expected a string or undefined.`);
   }
 
   return errors;
@@ -132,6 +173,8 @@ function validateIcons(manifest, errors) {
         }
 
         newErrors = validateString(icon, 'type', newErrors);
+
+        errors = validateKnownProperties('icon', icon, ['src', 'sizes', 'type'], errors);
       });
     }
   }
