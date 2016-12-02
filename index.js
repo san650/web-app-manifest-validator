@@ -4,32 +4,56 @@ module.exports = validate;
 
 var isArray = require('is-array');
 
+var ENUM_DIR = [
+  'rtl',
+  'ltr',
+  'auto'
+];
+
+var ENUM_DISPLAY = [
+  'fullscreen',
+  'standalone',
+  'minimal-ui',
+  'browser'
+];
+
+var ENUM_ORIENTATION = [
+  'any',
+  'natural',
+  'landscape',
+  'landscape-primary',
+  'landscape-secondary',
+  'portrait',
+  'portrait-primary',
+  'portrait-secondary'
+];
+
 // See "Manifest and its members" in https://w3c.github.io/manifest/
 
 function validate(manifest) {
   var errors = [];
 
-  errors = validateDir(manifest, []);
+  errors = validateEnum(manifest, 'dir', ENUM_DIR, errors);
   errors = validateLang(manifest, errors);
 
-  ['name', 'short_name', 'description', 'scope'].forEach(function(member) {
+  ['name', 'short_name', 'description', 'scope', 'color'].forEach(function(member) {
     errors = validateString(manifest, member, errors);
   });
 
   errors = validateStartUrl(manifest, errors);
   errors = validateIcons(manifest, errors);
+  errors = validateEnum(manifest, 'display', ENUM_DISPLAY, errors);
+  errors = validateEnum(manifest, 'orientation', ENUM_ORIENTATION, errors);
 
   return errors;
 }
 
-function validateDir(manifest, errors) {
-  if (manifest.dir !== undefined) {
-    if (typeof(manifest.dir) !== 'string') {
-      return add(errors, 'Invalid "dir" value type "' + typeof(manifest.dir) + '". Expected a string or undefined.');
-    }
+function validateEnum(manifest, memberName, values, errors) {
+  var value = manifest[memberName];
 
-    if (!includes(['ltr', 'rtl', 'auto'], manifest.dir)) {
-      return add(errors, 'Invalid "dir" value "' + manifest.dir + '". Expected one of "rtl", "ltr" or "auto".');
+  if (!isNullOrUndefined(value)) {
+    if (!includes(values, value)) {
+      return add(errors, `Invalid "${memberName}" value "${value}". Expected one of ${enumValues(values)}.`);
     }
   }
 
@@ -37,7 +61,7 @@ function validateDir(manifest, errors) {
 }
 
 function validateLang(manifest, errors) {
-  if (manifest.lang !== undefined && !/^\w*(-\w*)*$/.test(manifest.lang)) {
+  if (!isNullOrUndefined(manifest.lang) && !/^\w*(-\w*)*$/.test(manifest.lang)) {
     return add(errors, 'Invalid "lang" value "' + manifest.lang + '".');
   }
 
@@ -78,7 +102,7 @@ function validateIcons(manifest, errors) {
           newErrors = add(newErrors, 'Invalid "icons" value. Icons need to have a valid "src" attribute.');
         }
 
-        if (icon.sizes != null) {
+        if (!isNullOrUndefined(icon.sizes)) {
           if (typeof(icon.sizes) !== 'string' || !/^\s*\d+x\d+(\s+\d+x\d+)*\s*$/.test(icon.sizes)) {
             newErrors = add(newErrors, `Invalid icon's "sizes" value "${icon.sizes}". The expected format is "123x345".`);
           }
@@ -100,4 +124,19 @@ function includes(arr, value) {
   if (typeof(value) === 'string') {
     return arr.indexOf(value.toLowerCase()) > -1;
   }
+}
+
+function isNullOrUndefined(value) {
+  // Use == to validate against null and undefined
+  return value == null;
+}
+
+function enumValues(values) {
+  var enumValues = values.map(function(value) {
+    return `"${value}"`;
+  });
+
+  var last = enumValues.pop();
+
+  return `${enumValues.join(', ')} or ${last}`;
 }

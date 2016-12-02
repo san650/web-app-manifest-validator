@@ -24,7 +24,7 @@ describe('validate', function() {
 
     it('returns an error on invalid value type', function() {
       var expected = [
-        'Invalid "dir" value type "number". Expected a string or undefined.'
+        'Invalid "dir" value "100". Expected one of "rtl", "ltr" or "auto".'
       ];
       var manifest = {
         dir: 100
@@ -340,6 +340,79 @@ describe('validate', function() {
       assert.deepEqual(validate(manifest), [
         'Invalid "type" value type "number". Expected a string or undefined.'
       ]);
+    });
+  });
+
+  describe('display member', function() {
+    it('returns an error on invalid string value', function() {
+      var expected = [
+        'Invalid "display" value "foo". Expected one of "fullscreen", "standalone", "minimal-ui" or "browser".'
+      ];
+      var manifest = {
+        display: 'foo'
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "display" value "100". Expected one of "fullscreen", "standalone", "minimal-ui" or "browser".'
+      ];
+      var manifest = {
+        display: 100
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+  });
+
+  describe('orientation member', function() {
+    it('returns an error on invalid string value', function() {
+      var expected = [
+        'Invalid "orientation" value "foo". Expected one of "any", "natural", "landscape", "landscape-primary", "landscape-secondary", "portrait", "portrait-primary" or "portrait-secondary".'
+      ];
+      var manifest = {
+        orientation: 'foo'
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "orientation" value "100". Expected one of "any", "natural", "landscape", "landscape-primary", "landscape-secondary", "portrait", "portrait-primary" or "portrait-secondary".'
+      ];
+      var manifest = {
+        orientation: 100
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+  });
+
+  describe('color member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "color" value type "number". Expected a string or undefined.'
+      ];
+      var manifest = {
+        color: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid for any string', function() {
+      var manifest = {
+        color: 'foo bar'
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ color: undefined }), EMPTY);
     });
   });
 });
