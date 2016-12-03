@@ -282,7 +282,7 @@ describe('validate', function() {
       };
 
       assert.deepEqual(validate(manifest), [
-        'Invalid "icons" value. Icons need to have a valid "src" attribute.'
+        'Invalid "icons" value, icons need to have a valid "src" attribute.'
       ]);
     });
 
@@ -338,7 +338,7 @@ describe('validate', function() {
       };
 
       assert.deepEqual(validate(manifest), [
-        'Invalid "type" value type "number". Expected a string or undefined.'
+        'Invalid icon "type" value type "number". Expected a string or undefined.'
       ]);
     });
 
@@ -626,6 +626,143 @@ describe('validate', function() {
       };
 
       assert.deepEqual(validate(manifest), EMPTY);
+    });
+  });
+
+  describe('screenshots member', function() {
+    it('returns an error on invalid value type', function() {
+      var expected = [
+        'Invalid "screenshots" value type "number". Expected an array or undefined.'
+      ];
+      var manifest = {
+        screenshots: 123
+      };
+
+      assert.deepEqual(validate(manifest), expected);
+    });
+
+    it('is valid when value is undefined', function() {
+      assert.deepEqual(validate({ screenshots: undefined }), EMPTY);
+    });
+
+    it('is valid when is an empty array', function() {
+      var manifest = {
+        screenshots: []
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('is valid when element has source and sizes' , function() {
+      var manifest = {
+        screenshots: [
+          {
+            src: "screenshots/lowres.webp",
+            sizes: "1600x800 480x640",
+            type: "image/webp"
+          },
+          {
+            src: "screenshots/lowres.png",
+            sizes: "1024x768"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
+    it('validates src exists for every screenshot', function() {
+      var manifest = {
+        screenshots: [
+          {
+            src: "icon/lowres.webp",
+            sizes: "16x16 32x32 48x48",
+            type: "image/webp"
+          },{
+            sizes: "64x64"
+          }, {
+            src: 12,
+            sizes: "128x128"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), [
+        'Invalid "screenshots" value, screenshots need to have a valid "src" attribute.'
+      ]);
+    });
+
+    it('validates sizes are valid for every screenshot', function() {
+      var manifest = {
+        screenshots: [
+          {
+            src: "screenshots/lowres.webp",
+            sizes: "x16"
+          },{
+            src: "screenshots/lowres.webp",
+            sizes: "64x64 "
+          }, {
+            src: "screenshots/lowres.webp",
+            sizes: "hola"
+          },
+          {
+            src: "screenshots/lowres.webp",
+            sizes: 128
+          },{
+            src: "screenshots/lowres.webp",
+            sizes: "64x64,64x64"
+          }, {
+            src: "screenshots/lowres.webp",
+            sizes: "64x6464x64"
+          }, {
+            src: "screenshots/lowres.webp",
+            sizes: "64x64   64x64"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), [
+        `Invalid screenshot's "sizes" value "x16". The expected format is "123x345".`,
+        `Invalid screenshot's "sizes" value "hola". The expected format is "123x345".`,
+        `Invalid screenshot's "sizes" value "128". The expected format is "123x345".`,
+        `Invalid screenshot's "sizes" value "64x64,64x64". The expected format is "123x345".`,
+        `Invalid screenshot's "sizes" value "64x6464x64". The expected format is "123x345".`
+      ]);
+    });
+
+    it('validates type if of valid type for every screenshot', function() {
+      var manifest = {
+        screenshots: [
+          {
+            src: "icon/lowres.webp",
+            type: "foo/bar"
+          },{
+            src: "icon/lowres.webp",
+            type: 100
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), [
+        'Invalid screenshot "type" value type "number". Expected a string or undefined.'
+      ]);
+    });
+
+    it('validates screenshot has unknown properties', function() {
+      var expected = [
+        `Unknown screenshot attribute "foo".`
+      ];
+
+      var manifest = {
+        screenshots: [
+          {
+            src: "icon/lowres.webp",
+            foo: 123
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), expected);
     });
   });
 });

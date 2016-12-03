@@ -49,7 +49,8 @@ function validate(manifest) {
   });
 
   errors = validateStartUrl(manifest, errors);
-  errors = validateIcons(manifest, errors);
+  errors = validateImages(manifest, 'icons', 'icon', errors);
+  errors = validateImages(manifest, 'screenshots', 'screenshot', errors);
   errors = validateEnum(manifest, 'display', ENUM_DISPLAY, errors);
   errors = validateEnum(manifest, 'orientation', ENUM_ORIENTATION, errors);
   errors = validatePreferRelatedApplications(manifest, errors);
@@ -160,29 +161,30 @@ function validateStartUrl(manifest, errors) {
   return errors.concat(newErrors);
 }
 
-function validateIcons(manifest, errors) {
+function validateImages(manifest, memberName, itemName, errors) {
   var newErrors = [];
   var skip = false;
+  var items = manifest[memberName];
 
-  if (manifest.icons) {
-    if (!isArray(manifest.icons)) {
-      errors = add(errors, 'Invalid "icons" value type "' + typeof(manifest.icons) + '". Expected an array or undefined.');
+  if (items) {
+    if (!isArray(items)) {
+      errors = add(errors, 'Invalid "' + memberName + '" value type "' + typeof(items) + '". Expected an array or undefined.');
     } else {
-      manifest.icons.forEach(function(icon) {
-        if (!skip && (!icon.src || typeof icon.src !== 'string')) {
+      items.forEach(function(item) {
+        if (!skip && (!item.src || typeof item.src !== 'string')) {
           skip = true;
-          newErrors = add(newErrors, 'Invalid "icons" value. Icons need to have a valid "src" attribute.');
+          newErrors = add(newErrors, 'Invalid "' + memberName + '" value, ' + memberName + ' need to have a valid "src" attribute.');
         }
 
-        if (!isNullOrUndefined(icon.sizes)) {
-          if (typeof(icon.sizes) !== 'string' || !/^\s*\d+x\d+(\s+\d+x\d+)*\s*$/.test(icon.sizes)) {
-            newErrors = add(newErrors, `Invalid icon's "sizes" value "${icon.sizes}". The expected format is "123x345".`);
+        if (!isNullOrUndefined(item.sizes)) {
+          if (typeof(item.sizes) !== 'string' || !/^\s*\d+x\d+(\s+\d+x\d+)*\s*$/.test(item.sizes)) {
+            newErrors = add(newErrors, `Invalid ${itemName}'s "sizes" value "${item.sizes}". The expected format is "123x345".`);
           }
         }
 
-        newErrors = validateString(icon, 'type', newErrors);
+        newErrors = validateString(item, 'type', newErrors, { memberPrefix: itemName });
 
-        errors = validateKnownProperties('icon', icon, ['src', 'sizes', 'type'], errors);
+        errors = validateKnownProperties(itemName, item, ['src', 'sizes', 'type'], errors);
       });
     }
   }
