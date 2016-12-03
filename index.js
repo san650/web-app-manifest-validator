@@ -28,6 +28,25 @@ var ENUM_ORIENTATION = [
   'portrait-secondary'
 ];
 
+var MEMBERS = [
+  'background_color',
+  'color',
+  'description',
+  'dir',
+  'display',
+  'icons',
+  'lang',
+  'name',
+  'orientation',
+  'prefer_related_applications',
+  'related_applications',
+  'scope',
+  'screenshots',
+  'short_name',
+  'start_url',
+  'theme_color'
+];
+
 // See "Manifest and its members" in https://w3c.github.io/manifest/
 
 function validate(manifest) {
@@ -55,6 +74,8 @@ function validate(manifest) {
   errors = validateEnum(manifest, 'orientation', ENUM_ORIENTATION, errors);
   errors = validatePreferRelatedApplications(manifest, errors);
   errors = validatePreferredApplications(manifest, errors);
+
+  errors = validateKnownProperties('manifest', manifest, MEMBERS, errors);
 
   return errors;
 }
@@ -100,8 +121,8 @@ function validatePreferRelatedApplications(manifest, errors) {
 
   errors = validateBoolean(manifest, member, errors);
 
-  if (manifest[member] === true && !(isArray(manifest['preferred_applications']) && manifest['preferred_applications'].length)) {
-    errors = add(errors, '"prefer_related_applications" is set to true but "preferred_applications" is empty or undefined.');
+  if (manifest[member] === true && !(isArray(manifest['related_applications']) && manifest['related_applications'].length)) {
+    errors = add(errors, '"prefer_related_applications" is set to true but "related_applications" is empty or undefined.');
   }
 
   return errors;

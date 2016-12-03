@@ -10,6 +10,17 @@ describe('validate', function() {
     assert.deepEqual(validate({}), EMPTY);
   });
 
+  it('validates unknown members', function() {
+    var expected = [
+      'Unknown manifest attribute "foo".'
+    ];
+    var manifest = {
+      foo: 'bar'
+    };
+
+    assert.deepEqual(validate(manifest), expected);
+  });
+
   describe('dir member', function() {
     it('returns an error on invalid string value', function() {
       var expected = [
@@ -498,7 +509,7 @@ describe('validate', function() {
     it('is valid for any boolean', function() {
       var manifest = {
         prefer_related_applications: true,
-        preferred_applications: [
+        related_applications: [
           {
             platform: "itunes",
             url: "https://itunes.apple.com/app/example-app1/id123456789"
@@ -517,7 +528,7 @@ describe('validate', function() {
 
     it('returns an error if no related_application is defined', function() {
       var expected = [
-        '"prefer_related_applications" is set to true but "preferred_applications" is empty or undefined.'
+        '"prefer_related_applications" is set to true but "related_applications" is empty or undefined.'
       ];
       var manifest = {
         prefer_related_applications: true
