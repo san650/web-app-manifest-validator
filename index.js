@@ -85,7 +85,7 @@ function validatePreferredApplications(manifest, errors) {
 
   if (!isNullOrUndefined(applications)) {
     if (!isArray(applications)) {
-      errors = add(errors, `Invalid "related_applications" value type "${typeof(applications)}". Expected an array or undefined.`);
+      errors = add(errors, 'Invalid "related_applications" value type "' + typeof(applications) + '". Expected an array or undefined.');
     } else {
       applications.forEach(function(application) {
         errors = validateString(application, 'url', errors, {
@@ -109,7 +109,7 @@ function validatePreferredApplications(manifest, errors) {
 function validateKnownProperties(objectName, object, validProperties, errors) {
   Object.keys(object).forEach(function(property) {
     if (!includes(validProperties, property)) {
-      errors = add(errors, 'Unknown ' + objectName + ' attribute "' + property +'".');
+      errors = add(errors, 'Unknown ' + objectName + ' attribute "' + property + '".');
     }
   });
 
@@ -132,7 +132,7 @@ function validateBoolean(manifest, memberName, errors) {
   var value = manifest[memberName];
 
   if (!isNullOrUndefined(value) && typeof(value) !== 'boolean') {
-    return add(errors, `Invalid "${memberName}" value type "${typeof(value)}". Expected a boolean or undefined.`);
+    return add(errors, 'Invalid "' + memberName + '" value type "' + typeof(value) + '". Expected a boolean or undefined.');
   }
 
   return errors;
@@ -143,7 +143,7 @@ function validateEnum(manifest, memberName, values, errors) {
 
   if (!isNullOrUndefined(value)) {
     if (!includes(values, value)) {
-      return add(errors, `Invalid "${memberName}" value "${value}". Expected one of ${enumValues(values)}.`);
+      return add(errors, 'Invalid "' + memberName + '" value "' + value + '". Expected one of ' + enumValues(values) + '.');
     }
   }
 
@@ -164,7 +164,7 @@ function validateString(manifest, member, errors, options) {
   var prefix =options.memberPrefix ? ` ${options.memberPrefix} ` : ' ';
 
   if (manifest[member] && typeof(manifest[member]) !== 'string') {
-    return add(errors, `Invalid${prefix}"${member}" value type "${typeof(manifest[member])}". Expected a string or undefined.`);
+    return add(errors, 'Invalid' + prefix + '"' + member + '" value type "' + typeof(manifest[member]) + '". Expected a string or undefined.');
   }
 
   return errors;
@@ -199,7 +199,7 @@ function validateImages(manifest, memberName, itemName, errors) {
 
         if (!isNullOrUndefined(item.sizes)) {
           if (typeof(item.sizes) !== 'string' || !/^\s*\d+x\d+(\s+\d+x\d+)*\s*$/.test(item.sizes)) {
-            newErrors = add(newErrors, `Invalid ${itemName}'s "sizes" value "${item.sizes}". The expected format is "123x345".`);
+            newErrors = add(newErrors, 'Invalid ' + itemName + '\'s "sizes" value "' + item.sizes + '". The expected format is "123x345".');
           }
         }
 
@@ -230,10 +230,10 @@ function isNullOrUndefined(value) {
 
 function enumValues(values) {
   var enumValues = values.map(function(value) {
-    return `"${value}"`;
+    return '"' + value + '"';
   });
 
   var last = enumValues.pop();
 
-  return `${enumValues.join(', ')} or ${last}`;
+  return enumValues.join(', ') + ' or ' + last;
 }
