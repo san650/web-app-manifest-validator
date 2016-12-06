@@ -1,1 +1,3 @@
-tests/
+/tests
+.gitignore
+README.md
