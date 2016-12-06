@@ -161,7 +161,7 @@ function validateLang(manifest, errors) {
 function validateString(manifest, member, errors, options) {
   options = options || {};
 
-  var prefix =options.memberPrefix ? ` ${options.memberPrefix} ` : ' ';
+  var prefix = options.memberPrefix ? ' ' + options.memberPrefix + ' ' : ' ';
 
   if (manifest[member] && typeof(manifest[member]) !== 'string') {
     return add(errors, 'Invalid' + prefix + '"' + member + '" value type "' + typeof(manifest[member]) + '". Expected a string or undefined.');
@@ -175,7 +175,7 @@ function validateStartUrl(manifest, errors) {
   var startUrl = manifest.start_url;
   var scope = manifest.scope;
 
-  if (!newErrors.length && typeof(scope) === 'string' && typeof(startUrl) === 'string' && !startUrl.startsWith(scope)) {
+  if (!newErrors.length && typeof(scope) === 'string' && typeof(startUrl) === 'string' && startUrl.indexOf(scope) !== 0) {
     newErrors = add(newErrors, 'Invalid "start_url" value. "start_url" is not within scope of scope URL.');
   }
 

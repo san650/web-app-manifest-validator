@@ -1,4 +1,5 @@
 # web-app-manifest-validator
+[![Build Status](https://travis-ci.org/san650/web-app-manifest-validator.svg?branch=master)](https://travis-ci.org/san650/web-app-manifest-validator)
 
 Really simple [web app manifest](https://w3c.github.io/manifest/) validator.
 
