@@ -1,6 +1,6 @@
 {
   "name": "web-app-manifest-validator",
-  "version": "1.0.0-alpha.1",
+  "version": "1.0.0",
   "description": "Web app manifest validator",
   "main": "index.js",
   "scripts": {
