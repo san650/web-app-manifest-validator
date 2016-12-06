@@ -161,7 +161,7 @@ function validateLang(manifest, errors) {
 function validateString(manifest, member, errors, options) {
   options = options || {};
 
-  var prefix =options.memberPrefix ? ` ${options.memberPrefix} ` : ' ';
+  var prefix = options.memberPrefix ? ' ' + options.memberPrefix + ' ' : ' ';
 
   if (manifest[member] && typeof(manifest[member]) !== 'string') {
     return add(errors, 'Invalid' + prefix + '"' + member + '" value type "' + typeof(manifest[member]) + '". Expected a string or undefined.');

@@ -327,11 +327,11 @@ describe('validate', function() {
       };
 
       assert.deepEqual(validate(manifest), [
-        `Invalid icon's "sizes" value "x16". The expected format is "123x345".`,
-        `Invalid icon's "sizes" value "hola". The expected format is "123x345".`,
-        `Invalid icon's "sizes" value "128". The expected format is "123x345".`,
-        `Invalid icon's "sizes" value "64x64,64x64". The expected format is "123x345".`,
-        `Invalid icon's "sizes" value "64x6464x64". The expected format is "123x345".`
+        'Invalid icon\'s "sizes" value "x16". The expected format is "123x345".',
+        'Invalid icon\'s "sizes" value "hola". The expected format is "123x345".',
+        'Invalid icon\'s "sizes" value "128". The expected format is "123x345".',
+        'Invalid icon\'s "sizes" value "64x64,64x64". The expected format is "123x345".',
+        'Invalid icon\'s "sizes" value "64x6464x64". The expected format is "123x345".'
       ]);
     });
 
@@ -355,7 +355,7 @@ describe('validate', function() {
 
     it('validates icon has unknown properties', function() {
       var expected = [
-        `Unknown icon attribute "foo".`
+        'Unknown icon attribute "foo".'
       ];
 
       var manifest = {
@@ -560,7 +560,7 @@ describe('validate', function() {
 
     it('validates application object has valid platform', function() {
       var expected = [
-        `Invalid preferred application "platform" value type "number". Expected a string or undefined.`
+        'Invalid preferred application "platform" value type "number". Expected a string or undefined.'
       ];
 
       var manifest = {
@@ -576,7 +576,7 @@ describe('validate', function() {
 
     it('validates application object has valid url', function() {
       var expected = [
-        `Invalid preferred application "url" value type "number". Expected a string or undefined.`
+        'Invalid preferred application "url" value type "number". Expected a string or undefined.'
       ];
 
       var manifest = {
@@ -592,7 +592,7 @@ describe('validate', function() {
 
     it('validates application object has valid platform', function() {
       var expected = [
-        `Invalid preferred application "id" value type "number". Expected a string or undefined.`
+        'Invalid preferred application "id" value type "number". Expected a string or undefined.'
       ];
 
       var manifest = {
@@ -608,7 +608,7 @@ describe('validate', function() {
 
     it('validates application object has unknown properties', function() {
       var expected = [
-        `Unknown preferred application attribute "foo".`
+        'Unknown preferred application attribute "foo".'
       ];
 
       var manifest = {
@@ -733,11 +733,11 @@ describe('validate', function() {
       };
 
       assert.deepEqual(validate(manifest), [
-        `Invalid screenshot's "sizes" value "x16". The expected format is "123x345".`,
-        `Invalid screenshot's "sizes" value "hola". The expected format is "123x345".`,
-        `Invalid screenshot's "sizes" value "128". The expected format is "123x345".`,
-        `Invalid screenshot's "sizes" value "64x64,64x64". The expected format is "123x345".`,
-        `Invalid screenshot's "sizes" value "64x6464x64". The expected format is "123x345".`
+        'Invalid screenshot\'s "sizes" value "x16". The expected format is "123x345".',
+        'Invalid screenshot\'s "sizes" value "hola". The expected format is "123x345".',
+        'Invalid screenshot\'s "sizes" value "128". The expected format is "123x345".',
+        'Invalid screenshot\'s "sizes" value "64x64,64x64". The expected format is "123x345".',
+        'Invalid screenshot\'s "sizes" value "64x6464x64". The expected format is "123x345".'
       ]);
     });
 
@@ -761,7 +761,7 @@ describe('validate', function() {
 
     it('validates screenshot has unknown properties', function() {
       var expected = [
-        `Unknown screenshot attribute "foo".`
+        'Unknown screenshot attribute "foo".'
       ];
 
       var manifest = {
