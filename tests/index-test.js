@@ -276,6 +276,21 @@ describe('validate', function() {
       assert.deepEqual(validate(manifest), EMPTY);
     });
 
+    it('is valid when element has purpose' , function() {
+      var manifest = {
+        icons: [
+          {
+            src: "icon/lowres.webp",
+            sizes: "16x16 32x32 48x48",
+            type: "image/webp",
+            purpose: "any"
+          }
+        ]
+      };
+
+      assert.deepEqual(validate(manifest), EMPTY);
+    });
+
     it('validates src exists for every icon', function() {
       var manifest = {
         icons: [

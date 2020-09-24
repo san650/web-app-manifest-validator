@@ -205,7 +205,7 @@ function validateImages(manifest, memberName, itemName, errors) {
 
         newErrors = validateString(item, 'type', newErrors, { memberPrefix: itemName });
 
-        errors = validateKnownProperties(itemName, item, ['src', 'sizes', 'type'], errors);
+        errors = validateKnownProperties(itemName, item, ['src', 'sizes', 'type', 'purpose'], errors);
       });
     }
   }
