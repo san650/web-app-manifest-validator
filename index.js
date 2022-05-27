@@ -2,8 +2,6 @@
 
 module.exports = validate;
 
-var isArray = require('is-array');
-
 var ENUM_DIR = [
   'rtl',
   'ltr',
@@ -84,7 +82,7 @@ function validatePreferredApplications(manifest, errors) {
   var applications = manifest['related_applications'];
 
   if (!isNullOrUndefined(applications)) {
-    if (!isArray(applications)) {
+    if (!Array.isArray(applications)) {
       errors = add(errors, 'Invalid "related_applications" value type "' + typeof(applications) + '". Expected an array or undefined.');
     } else {
       applications.forEach(function(application) {
@@ -121,7 +119,7 @@ function validatePreferRelatedApplications(manifest, errors) {
 
   errors = validateBoolean(manifest, member, errors);
 
-  if (manifest[member] === true && !(isArray(manifest['related_applications']) && manifest['related_applications'].length)) {
+  if (manifest[member] === true && !(Array.isArray(manifest['related_applications']) && manifest['related_applications'].length)) {
     errors = add(errors, '"prefer_related_applications" is set to true but "related_applications" is empty or undefined.');
   }
 
@@ -188,7 +186,7 @@ function validateImages(manifest, memberName, itemName, errors) {
   var items = manifest[memberName];
 
   if (items) {
-    if (!isArray(items)) {
+    if (!Array.isArray(items)) {
       errors = add(errors, 'Invalid "' + memberName + '" value type "' + typeof(items) + '". Expected an array or undefined.');
     } else {
       items.forEach(function(item) {
